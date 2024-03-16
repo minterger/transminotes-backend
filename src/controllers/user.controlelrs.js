@@ -34,7 +34,31 @@ export const signup = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
+    console.error(error);
   }
 };
 
-export const signin = (req, res) => {};
+export const signin = async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await User.findOne({ username });
+
+    if (!user)
+      res.status(404).json({ message: "Usuario o Contraseña Incorrectos" });
+
+    const passwordMatch = await user.comparePassword(password);
+
+    if (!passwordMatch)
+      res.status(404).json({ message: "Usuario o Contraseña Incorrectas" });
+
+    const token = genToken(user.id);
+
+    res.json({
+      token,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+    console.error(error);
+  }
+};
