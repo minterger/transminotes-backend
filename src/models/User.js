@@ -6,8 +6,8 @@ const saltRounds = 10; // cantidad de rondas
 const ObjectId = Schema.Types.ObjectId;
 
 const userSchema = new Schema({
-  username: { type: String, required: true }, // usuario de instagram
-  password: { type: String }, // contraseña encriptada
+  username: { type: String, required: true, unique: true }, // usuario de instagram
+  password: { type: String, required: true }, // contraseña encriptada
   Questions: [{ type: ObjectId, ref: "Question" }], // array with questions id
   answers: [{ type: ObjectId, ref: "Answer" }], // array with answers id
   files: [{ type: ObjectId, ref: "File" }], // array with files id

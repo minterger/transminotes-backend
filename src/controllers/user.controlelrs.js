@@ -11,13 +11,15 @@ export const getUser = (req, res) => {
 
 export const signup = async (req, res) => {
   const { username, password, confirm_password } = req.body;
+  console.log(req.body);
   try {
-    if (password !== confirm_password)
-      res.status(404).json({ message: "Las contraseñas no coinciden" });
-
     const findUser = await User.findOne({ username });
 
-    if (findUser) res.status(404).json({ message: "El usuario ya existe" });
+    if (findUser)
+      return res.status(404).json({ message: "El usuario ya existe" });
+
+    if (password !== confirm_password)
+      return res.status(404).json({ message: "Las contraseñas no coinciden" });
 
     const newUser = new User({
       username,
@@ -41,16 +43,21 @@ export const signup = async (req, res) => {
 export const signin = async (req, res) => {
   const { username, password } = req.body;
 
+  console.log(req.body);
   try {
     const user = await User.findOne({ username });
 
     if (!user)
-      res.status(404).json({ message: "Usuario o Contraseña Incorrectos" });
+      return res
+        .status(404)
+        .json({ message: "Usuario o Contraseña Incorrectos" });
 
     const passwordMatch = await user.comparePassword(password);
 
     if (!passwordMatch)
-      res.status(404).json({ message: "Usuario o Contraseña Incorrectas" });
+      return res
+        .status(404)
+        .json({ message: "Usuario o Contraseña Incorrectas" });
 
     const token = genToken(user.id);
 

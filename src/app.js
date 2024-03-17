@@ -3,6 +3,7 @@ import fileupload from "express-fileupload";
 import morgan from "morgan";
 import cors from "cors";
 import indexRoute from "./routes/index.routes.js";
+import userRoute from "./routes/user.routes.js";
 
 // conexion a la base de datos
 import "./database.js";
@@ -21,9 +22,10 @@ app.use(fileupload());
 
 // routes
 app.get("/", (req, res) => {
-  res.send("ok");
+  res.send("ok, Transmi Notes");
 });
 
+app.use(userRoute); // login, register, get user data
 app.use(indexRoute);
 
 export default app;
