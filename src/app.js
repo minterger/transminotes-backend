@@ -1,9 +1,11 @@
 import express from "express";
-import fileupload from "express-fileupload";
+import fileUpload from "express-fileupload";
 import morgan from "morgan";
 import cors from "cors";
 import indexRoute from "./routes/index.routes.js";
 import userRoute from "./routes/user.routes.js";
+import qaRoutes from "./routes/qa.routes.js";
+import filesRoutes from "./routes/files.routes.js";
 
 // conexion a la base de datos
 import "./database.js";
@@ -18,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 // middlewares
 app.use(morgan("dev"));
 app.use(cors());
-app.use(fileupload());
+app.use(fileUpload());
 
 // routes
 app.get("/", (req, res) => {
@@ -26,6 +28,8 @@ app.get("/", (req, res) => {
 });
 
 app.use(userRoute); // login, register, get user data
+app.use(qaRoutes);
+app.use(filesRoutes);
 app.use(indexRoute);
 
 export default app;

@@ -1,5 +1,4 @@
 import Question from "../models/Question.js";
-import User from "../models/User.js";
 
 export const addQuestion = async (req, res) => {
   const { files, title, description } = req.body;
@@ -33,6 +32,10 @@ export const updateQuestion = async (req, res) => {
 
   try {
     const findQuestion = await Question.findById(id);
+
+    if (findQuestion.user?.id !== req.user?.id) {
+      res.satus(401).json({ message: "Acceso no autorizado" });
+    }
 
     if (!findQuestion)
       return res.status(404).json({ message: "Pregunta no encontrada" });
@@ -78,7 +81,7 @@ export const getAllQuestions = async (req, res) => {
   const idUsuario = req.params.id;
 
   try {
-    const questions = await Question.find({ user: idUsuario });
+    const questions = await Question.find({ user: idUsuario }).populate();
 
     if (!questions.length)
       return res.status(404).json({
