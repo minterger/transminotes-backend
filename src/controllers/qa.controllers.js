@@ -1,3 +1,4 @@
+import Answer from "../models/Answer.js";
 import Question from "../models/Question.js";
 
 export const addQuestion = async (req, res) => {
@@ -97,5 +98,29 @@ export const getAllQuestions = async (req, res) => {
       message: "Interna Server Error",
     });
     console.error(error);
+  }
+};
+
+export const addAnswer = async (req, res) => {
+  const idQustion = req.params.idQuestion;
+
+  const { description, files } = req.body;
+
+  try {
+    const question = await Question.findById(idQustion);
+
+    if (!question)
+      return res.status(404).json({ message: "Pregunta no encontada" });
+
+    const newAnswer = new Answer({ description, files, question: idQustion });
+
+    const answer = await newAnswer.save();
+
+    question.answers.push(answer.id);
+
+    res.json({ message: "Respuesta guardada" });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+    console.log(error);
   }
 };

@@ -13,12 +13,10 @@ router.post("/question", verifyToken, addQuestion);
 
 router.put("/question/:id", verifyToken, updateQuestion);
 
-router.get("/question", getQuestion);
+router.get("/question/:id", getQuestion);
 
 router.get("/question/all", getAllQuestions);
 
-router.post("/answer", verifyToken);
-
-router.put("/answer/:id", verifyToken);
+router.post("/answer/:idQuestion", verifyToken, addAnswer);
 
 export default router;
